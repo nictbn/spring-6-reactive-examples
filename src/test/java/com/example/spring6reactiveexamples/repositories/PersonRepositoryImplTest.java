@@ -6,6 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Objects;
 
 class PersonRepositoryImplTest {
     PersonRepository personRepository = new PersonRepositoryImpl();
@@ -70,6 +71,24 @@ class PersonRepositoryImplTest {
                 .filter(person -> person.getFirstName().equals("Fiona"))
                 .next();
         fionaMono.subscribe(person -> System.out.println(person.getFirstName()));
+    }
+
+    @Test
+    void testFindPersonByIdNotFound() {
+        Flux<Person> personFlux = personRepository.findAll();
+        final Integer id = 8;
+        Mono<Person> personMono = personFlux.filter(person -> Objects.equals(person.getId(), id))
+                .single()
+                .doOnError(throwable -> {
+                    System.out.println("Error occurred in flux");
+                    System.out.println(throwable.toString());
+                });
+        personMono.subscribe(person -> {
+            System.out.println(person.toString());
+        }, throwable -> {
+            System.out.println("Error occurred in the mono");
+            System.out.println(throwable.toString());
+        });
     }
 
 }
