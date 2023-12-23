@@ -31,7 +31,7 @@ public class PersonRepositoryImpl implements PersonRepository {
             .build();
 
     @Override
-    public Mono<Person> getByUd(Integer id) {
+    public Mono<Person> getById(Integer id) {
         return Mono.just(michael);
     }
 
