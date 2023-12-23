@@ -8,6 +8,9 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class PersonRepositoryImplTest {
     PersonRepository personRepository = new PersonRepositoryImpl();
 
@@ -89,6 +92,18 @@ class PersonRepositoryImplTest {
             System.out.println("Error occurred in the mono");
             System.out.println(throwable.toString());
         });
+    }
+
+    @Test
+    void testGetByIdFound() {
+        Mono<Person> personMono = personRepository.getById(3);
+        assertEquals(Boolean.TRUE, personMono.hasElement().block());
+    }
+
+    @Test
+    void testGetByIdNotFound() {
+        Mono<Person> personMono = personRepository.getById(6);
+        assertEquals(Boolean.FALSE, personMono.hasElement().block());
     }
 
 }
